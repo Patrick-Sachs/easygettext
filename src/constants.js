@@ -1,23 +1,18 @@
 exports.PROGRAM_NAME = 'easygettext';
 
 exports.DEFAULT_ATTRIBUTES = [
-  'get-text',
-  'i18n',
-  'translate',
+  't'
 ];
 
 exports.DEFAULT_FILTERS = [
-  'i18n',
-  'translate',
+  't'
 ];
 
 exports.DEFAULT_VUE_GETTEXT_FUNCTIONS = {
-  '_': ['msgid'],
   '$t': ['msgid'],
-  '$gettext': ['msgid'],
-  '$ngettext': ['msgid', 'plural', null],
-  '$pgettext': ['msgctxt', 'msgid'],
-  '$npgettext': ['msgctxt', 'msgid', 'plural', null],
+  '$tn': ['msgid', 'plural', null],
+  '$tp': ['msgctxt', 'msgid'],
+  '$tnp': ['msgctxt', 'msgid', 'plural', null],
 };
 
 exports.DEFAULT_START_DELIMITER = '{{';
