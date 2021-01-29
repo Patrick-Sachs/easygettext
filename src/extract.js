@@ -1,8 +1,6 @@
 const cheerio = require('cheerio');
 const cheerioUtils = require('cheerio/lib/utils');
 const Pofile = require('pofile');
-const pug = require('pug');
-const {parse, compileTemplate} = require('@vue/compiler-sfc');
 const acorn = require('acorn');
 const walk = require('acorn-walk');
 const constants = require('./constants.js');
@@ -55,6 +53,7 @@ function preprocessScript(data, type) {
   const contents = [];
 
   if (type === 'vue') {
+    const {parse, compileTemplate} = require('@vue/compiler-sfc');
     const vueFile = parse(data).descriptor;
 
     const script = vueFile.script || vueFile.scriptSetup;
@@ -84,10 +83,11 @@ function preprocessScript(data, type) {
 }
 
 function preprocessTemplate(data, type = 'html') {
-  let templateData = null;
+  let templateData = data || '';
 
   if (data) {
     if (type === 'jade' || type === 'pug') {
+      const pug = require('pug');
       templateData = pug.render(data, {
         filename: 'source.html',
         pretty: true,
@@ -266,7 +266,7 @@ exports.Extractor = class Extractor {
     ];
   }
 
-  extract(filename, ext, content) {
+  extract(filename, ext, content, jsParser = 'auto') {
     const templateData = preprocessTemplate(content, ext);
 
     if (templateData) {
@@ -276,11 +276,11 @@ exports.Extractor = class Extractor {
     preprocessScript(content, ext).forEach(
       ({content: fileContent, lang}) => {
         if (lang === 'js') {
-          this.parseJavascript(filename, fileContent);
+          this.parseJavascript(filename, fileContent, jsParser);
         } else if (lang === 'ts') {
           this.parseTypeScript(filename, fileContent);
         }
-      }
+      },
     );
   }
 
