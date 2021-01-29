@@ -57,10 +57,11 @@ function preprocessScript(data, type) {
   if (type === 'vue') {
     const vueFile = parse(data).descriptor;
 
-    if (vueFile.script) {
+    const script = vueFile.script || vueFile.scriptSetup;
+    if (script) {
       contents.push({
-        content: vueFile.script.content.trim(),
-        lang: vueFile.script.lang || 'js',
+        content: script.content.trim(),
+        lang: script.lang || 'js',
       });
     }
 
